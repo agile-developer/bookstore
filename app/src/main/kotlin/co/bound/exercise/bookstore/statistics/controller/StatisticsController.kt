@@ -3,6 +3,8 @@ package co.bound.exercise.bookstore.statistics.controller
 import co.bound.exercise.bookstore.statistics.service.BookStatisticsResult
 import co.bound.exercise.bookstore.statistics.service.StatisticsService
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -31,8 +33,8 @@ class StatisticsController(
             }
 
             is BookStatisticsResult.NotFound -> {
-                logger.warn(statisticsResult.message)
-                ResponseEntity.notFound().build<String>()
+                ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, statisticsResult.message))
+                    .build<String>()
             }
         }
     }
