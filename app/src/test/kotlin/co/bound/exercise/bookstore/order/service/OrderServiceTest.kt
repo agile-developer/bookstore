@@ -19,7 +19,7 @@ class OrderServiceTest {
     fun `should create an order when provided a valid request`() {
         // arrange
         val isbn = "978-0141184999"
-        val bookQuote = quoteService.getQuote(isbn) as BookQuoteResult.Success
+        val bookQuote = quoteService.createQuote(isbn) as BookQuoteResult.Success
         val orderRequest = CreateOrderRequest(UUID.randomUUID().toString(),
             bookQuote.bookQuote.id, Address(
                 "Wendover Court",

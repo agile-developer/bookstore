@@ -6,6 +6,7 @@ data class Order(
     val id: String = UUID.randomUUID().toString(),
     val idempotencyId: String,
     val quoteId: String,
+    val isbn: String,
     val status: Status,
     val deliveryAddress: Address,
 ) {

@@ -24,7 +24,7 @@ class QuoteController(
         if (isbn.isBlank()) {
             return ResponseEntity.badRequest().body("ISBN cannot be empty")
         }
-        return when (val bookQuoteResult = quoteService.getQuote(isbn)) {
+        return when (val bookQuoteResult = quoteService.createQuote(isbn)) {
             is BookQuoteResult.Success -> {
                 val bookQuote = bookQuoteResult.bookQuote
                 ResponseEntity.ok(QuoteResponse(bookQuote.id, bookQuote.isbn, bookQuote.price))

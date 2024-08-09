@@ -16,7 +16,7 @@ class QuoteServiceTest {
         val isbn = "978-0141184999"
 
         // act
-        val bookQuote = quoteService.getQuote(isbn)
+        val bookQuote = quoteService.createQuote(isbn)
 
         // assert
         assertThat(bookQuote).isInstanceOf(BookQuoteResult.Success::class.java)
@@ -27,7 +27,7 @@ class QuoteServiceTest {
     fun `returns true for valid quote`() {
         // arrange
         val isbn = "978-0141184999"
-        val bookQuote = quoteService.getQuote(isbn) as BookQuoteResult.Success
+        val bookQuote = quoteService.createQuote(isbn) as BookQuoteResult.Success
 
         // act
         val result = quoteService.isValidQuote(bookQuote.bookQuote.id)
@@ -53,7 +53,7 @@ class QuoteServiceTest {
     fun `returns false after a quote has been invalidated`() {
         // arrange
         val isbn = "978-0141184999"
-        val bookQuote = quoteService.getQuote(isbn) as BookQuoteResult.Success
+        val bookQuote = quoteService.createQuote(isbn) as BookQuoteResult.Success
 
         // act & assert
         val isValid = quoteService.isValidQuote(bookQuote.bookQuote.id)

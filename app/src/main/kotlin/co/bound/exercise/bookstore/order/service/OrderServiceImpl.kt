@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 @Service
 class OrderServiceImpl(
     private val quoteService: QuoteService,
-    private val valdiviaClient: ValdiviaClient
+    private val valdiviaClient: ValdiviaClient,
 ) : OrderService {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -24,7 +24,8 @@ class OrderServiceImpl(
             return CreateOrderResult.Success(createdOrders[request.idempotencyId]!!)
         }
 
-        if (!quoteService.isValidQuote(request.quoteId)) {
+        val bookQuote = quoteService.getQuote(request.quoteId)
+        if (bookQuote == null) {
             logger.error("QuoteId: ${request.quoteId} is not valid")
             return CreateOrderResult.Error(request.quoteId)
         }
@@ -40,6 +41,7 @@ class OrderServiceImpl(
         val order = Order(
             idempotencyId = request.idempotencyId,
             quoteId = request.quoteId,
+            isbn = bookQuote.isbn,
             status = Order.Status.CREATED,
             deliveryAddress = request.deliveryAddress
         )

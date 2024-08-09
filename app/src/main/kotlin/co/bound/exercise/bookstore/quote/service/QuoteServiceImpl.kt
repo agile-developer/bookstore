@@ -15,7 +15,7 @@ class QuoteServiceImpl(
 
     private val createdQuotes = ConcurrentHashMap<String, BookQuote>()
 
-    override fun getQuote(isbn: String): BookQuoteResult {
+    override fun createQuote(isbn: String): BookQuoteResult {
         logger.info("Calling Valdivia to get quote for ISBN: $isbn")
         val quote = valdiviaClient.getBookQuote(isbn)
         val bookQuote = BookQuote(quote.id, isbn, quote.price)
@@ -34,4 +34,9 @@ class QuoteServiceImpl(
         }
         return false
     }
+
+    override fun getQuote(id: String): BookQuote? {
+        return createdQuotes[id]
+    }
+
 }

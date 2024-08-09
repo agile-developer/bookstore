@@ -4,11 +4,13 @@ import co.bound.exercise.bookstore.domain.BookQuote
 
 interface QuoteService {
 
-    fun getQuote(isbn: String): BookQuoteResult
+    fun createQuote(isbn: String): BookQuoteResult
 
     fun isValidQuote(quoteId: String): Boolean
 
     fun invalidateQuote(quoteId: String): Boolean
+
+    fun getQuote(id: String): BookQuote?
 }
 
 sealed interface BookQuoteResult {
