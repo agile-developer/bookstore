@@ -17,12 +17,12 @@ class EventListeners(
     @EventListener
     fun onBookSearched(bookSearched: BookSearched) {
         logger.info("Book searched, ISBN: ${bookSearched.bookSummary.isbn}, title: ${bookSearched.bookSummary.title}")
-        statisticsService.updateBookSearchCount(bookSearched.bookSummary.isbn)
+        statisticsService.incrementBookSearchCount(bookSearched.bookSummary.isbn)
     }
 
     @EventListener
     fun onOrderCreated(orderCreated: OrderCreated) {
         logger.info("Book ordered, ISBN: ${orderCreated.order.isbn}, quoteId: ${orderCreated.order.quoteId}")
-        statisticsService.updateBookOrderCount(orderCreated.order.isbn)
+        statisticsService.incrementBookOrderCount(orderCreated.order.isbn)
     }
 }

@@ -21,11 +21,12 @@ class StatisticsServiceImpl : StatisticsService {
         return BookStatisticsResult.Found(bookStatisticsRepo[isbn]!!)
     }
 
-    override fun updateBookSearchCount(isbn: String): Int {
+    override fun incrementBookSearchCount(isbn: String): Int {
         logger.info("Updating search count for ISBN: $isbn")
         var statistics = bookStatisticsRepo[isbn]
         if (statistics != null) {
-            bookStatisticsRepo.replace(isbn, statistics.incrementSearchCount())
+            statistics = statistics.incrementSearchCount()
+            bookStatisticsRepo.replace(isbn, statistics)
         } else {
             statistics = BookStatistics(isbn, 1, 0)
             bookStatisticsRepo[isbn] = statistics
@@ -33,11 +34,12 @@ class StatisticsServiceImpl : StatisticsService {
         return statistics.searchCount
     }
 
-    override fun updateBookOrderCount(isbn: String): Int {
+    override fun incrementBookOrderCount(isbn: String): Int {
         logger.info("Updating order count for ISBN: $isbn")
         var statistics = bookStatisticsRepo[isbn]
         if (statistics != null) {
-            bookStatisticsRepo.replace(isbn, statistics.incrementOrderCount())
+            statistics = statistics.incrementOrderCount()
+            bookStatisticsRepo.replace(isbn, statistics)
         } else {
             statistics = BookStatistics(isbn, 0, 1)
             bookStatisticsRepo[isbn] = statistics

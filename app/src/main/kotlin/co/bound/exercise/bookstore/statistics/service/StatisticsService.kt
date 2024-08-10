@@ -6,9 +6,9 @@ interface StatisticsService {
 
     fun getBookStatistics(isbn: String): BookStatisticsResult
 
-    fun updateBookSearchCount(isbn: String): Int
+    fun incrementBookSearchCount(isbn: String): Int
 
-    fun updateBookOrderCount(isbn: String): Int
+    fun incrementBookOrderCount(isbn: String): Int
 }
 
 sealed interface BookStatisticsResult {
