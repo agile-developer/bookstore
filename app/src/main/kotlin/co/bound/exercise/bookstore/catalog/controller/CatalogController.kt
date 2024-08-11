@@ -48,7 +48,7 @@ class CatalogController(
         }
         val bookSummaries = searchResults.map { BookSummary(it.isbn, it.title, it.author) }
         bookSummaries.forEach {
-            publisher.publishEvent(BookSearched(this, it))
+            publisher.publishEvent(BookSearched(eventSource = this, bookSummary = it))
         }
         return ResponseEntity.ok(SearchResponse(bookSummaries))
     }

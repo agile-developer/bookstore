@@ -1,5 +1,6 @@
 package co.bound.exercise.bookstore.quote.service
 
+import co.bound.exercise.bookstore.catalog.service.CatalogService
 import co.bound.exercise.bookstore.domain.BookQuote
 import co.bound.exercise.thirdparties.valdivia.ValdiviaClient
 import org.slf4j.LoggerFactory
@@ -8,7 +9,8 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class QuoteServiceImpl(
-    private val valdiviaClient: ValdiviaClient
+    private val valdiviaClient: ValdiviaClient,
+    private val catalogService: CatalogService
 ) : QuoteService {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -17,8 +19,13 @@ class QuoteServiceImpl(
 
     override fun createQuote(isbn: String): BookQuoteResult {
         logger.info("Calling Valdivia to get quote for ISBN: $isbn")
+        val bookSummary = catalogService.searchByIsbn(isbn)
+        if (bookSummary == null) {
+            logger.warn("No book found for ISBN: $isbn")
+            return BookQuoteResult.Error(isbn)
+        }
         val quote = valdiviaClient.getBookQuote(isbn)
-        val bookQuote = BookQuote(quote.id, isbn, quote.price)
+        val bookQuote = BookQuote(quote.id, quote.price, bookSummary)
         createdQuotes[quote.id] = bookQuote
         return BookQuoteResult.Success(bookQuote)
     }

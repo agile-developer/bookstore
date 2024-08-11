@@ -22,7 +22,8 @@ class EventListeners(
 
     @EventListener
     fun onOrderCreated(orderCreated: OrderCreated) {
-        logger.info("Book ordered, ISBN: ${orderCreated.order.isbn}, quoteId: ${orderCreated.order.quoteId}")
-        statisticsService.incrementBookOrderCount(orderCreated.order.isbn)
+        logger.info("Book ordered, ISBN: ${orderCreated.order.bookQuote.booksSummary.isbn}," +
+                " quoteId: ${orderCreated.order.bookQuote.id}")
+        statisticsService.incrementBookOrderCount(orderCreated.order.bookQuote.booksSummary.isbn)
     }
 }

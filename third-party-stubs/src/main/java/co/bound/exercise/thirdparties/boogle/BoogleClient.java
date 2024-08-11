@@ -2,6 +2,7 @@ package co.bound.exercise.thirdparties.boogle;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static co.bound.exercise.thirdparties.boogle.Genre.*;
@@ -21,6 +22,18 @@ public class BoogleClient {
         return getAllBooks().stream()
                 .filter(b -> b.author().equals(author))
                 .toList();
+    }
+
+    /**
+     * Retrieve a book by ISBN.
+     *
+     * @param isbn the isbn
+     * @return an Optional<BookSummary> with the given ISBN
+     */
+    public Optional<BookSummary> findBookByIsbn(String isbn) {
+        return getAllBooks().stream()
+                .filter(book -> book.isbn().equals(isbn))
+                .findFirst();
     }
 
     /**

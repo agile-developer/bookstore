@@ -32,4 +32,29 @@ class CatalogServiceTest {
         // assert
         assertThat(result).isEmpty()
     }
+
+    @Test
+    fun `searching for a known ISBN returns results`() {
+        // arrange
+        val isbn = "978-0141989587"
+
+        // act
+        val result = catalogService.searchByIsbn(isbn)
+
+        // assert
+        assertThat(result).isNotNull
+    }
+
+    @Test
+    fun `searching for an unknown ISBN returns no results`() {
+        // arrange
+        val isbn = "Unknown"
+
+        // act
+        val result = catalogService.searchByIsbn(isbn)
+
+        // assert
+        assertThat(result).isNull()
+    }
+
 }

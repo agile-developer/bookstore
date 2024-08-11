@@ -1,5 +1,7 @@
 package co.bound.exercise.bookstore.quote.service
 
+import co.bound.exercise.bookstore.catalog.service.CatalogServiceImpl
+import co.bound.exercise.thirdparties.boogle.BoogleClient
 import co.bound.exercise.thirdparties.valdivia.ValdiviaClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -8,7 +10,7 @@ import java.util.UUID
 class QuoteServiceTest {
 
     private val valdiviaClient = ValdiviaClient()
-    private val quoteService = QuoteServiceImpl(valdiviaClient)
+    private val quoteService = QuoteServiceImpl(valdiviaClient, CatalogServiceImpl(BoogleClient()))
 
     @Test
     fun `returns quote for ISBN`() {

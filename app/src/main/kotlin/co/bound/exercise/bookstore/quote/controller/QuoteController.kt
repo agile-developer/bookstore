@@ -27,7 +27,7 @@ class QuoteController(
         return when (val bookQuoteResult = quoteService.createQuote(isbn)) {
             is BookQuoteResult.Success -> {
                 val bookQuote = bookQuoteResult.bookQuote
-                ResponseEntity.ok(QuoteResponse(bookQuote.id, bookQuote.isbn, bookQuote.price))
+                ResponseEntity.ok(QuoteResponse(bookQuote.id, bookQuote.booksSummary.isbn, bookQuote.price))
             }
 
             is BookQuoteResult.Error -> {

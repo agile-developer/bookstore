@@ -40,8 +40,7 @@ class OrderServiceImpl(
 
         val order = Order(
             idempotencyId = request.idempotencyId,
-            quoteId = request.quoteId,
-            isbn = bookQuote.isbn,
+            bookQuote = bookQuote,
             status = Order.Status.CREATED,
             deliveryAddress = request.deliveryAddress
         )

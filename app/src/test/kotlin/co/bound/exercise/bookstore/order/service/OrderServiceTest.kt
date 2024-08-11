@@ -1,9 +1,11 @@
 package co.bound.exercise.bookstore.order.service
 
+import co.bound.exercise.bookstore.catalog.service.CatalogServiceImpl
 import co.bound.exercise.bookstore.domain.Address
 import co.bound.exercise.bookstore.order.controller.CreateOrderRequest
 import co.bound.exercise.bookstore.quote.service.BookQuoteResult
 import co.bound.exercise.bookstore.quote.service.QuoteServiceImpl
+import co.bound.exercise.thirdparties.boogle.BoogleClient
 import co.bound.exercise.thirdparties.valdivia.ValdiviaClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,16 +14,17 @@ import java.util.*
 class OrderServiceTest {
 
     private val valdiviaClient = ValdiviaClient()
-    private val quoteService = QuoteServiceImpl(valdiviaClient)
+    private val catalogService = CatalogServiceImpl(BoogleClient())
+    private val quoteService = QuoteServiceImpl(valdiviaClient, catalogService)
     private val orderService = OrderServiceImpl(quoteService, valdiviaClient)
 
     @Test
     fun `should create an order when provided a valid request`() {
         // arrange
         val isbn = "978-0141184999"
-        val bookQuote = quoteService.createQuote(isbn) as BookQuoteResult.Success
+        val bookQuoteResult = quoteService.createQuote(isbn) as BookQuoteResult.Success
         val orderRequest = CreateOrderRequest(UUID.randomUUID().toString(),
-            bookQuote.bookQuote.id, Address(
+            bookQuoteResult.bookQuote.id, Address(
                 "Wendover Court",
                 "Finchley Road",
                 "NW2 2PD",
@@ -35,7 +38,7 @@ class OrderServiceTest {
         // assert
         assertThat(result).isInstanceOf(CreateOrderResult.Success::class.java)
         val orderResult = result as CreateOrderResult.Success
-        assertThat(orderResult.order.quoteId).isEqualTo(bookQuote.bookQuote.id)
+        assertThat(orderResult.order.bookQuote.id).isEqualTo(bookQuoteResult.bookQuote.id)
     }
 
     @Test

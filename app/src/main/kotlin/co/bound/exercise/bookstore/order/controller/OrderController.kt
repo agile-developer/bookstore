@@ -36,8 +36,8 @@ class OrderController(
         return when(val orderResult = orderService.createOrder(request)) {
             is CreateOrderResult.Success -> {
                 val order = orderResult.order
-                publisher.publishEvent(OrderCreated(this, order))
-                ResponseEntity.ok(CreateOrderResponse(order.id, order.status, order.quoteId))
+                publisher.publishEvent(OrderCreated(eventSource =  this, order = order))
+                ResponseEntity.ok(CreateOrderResponse(order.id, order.status, order.bookQuote.id))
             }
 
             is CreateOrderResult.Error -> ResponseEntity.badRequest().body(orderResult.message)
