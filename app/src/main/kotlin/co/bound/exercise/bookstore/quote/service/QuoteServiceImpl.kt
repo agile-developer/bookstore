@@ -19,7 +19,7 @@ class QuoteServiceImpl(
 
     override fun createQuote(isbn: String): BookQuoteResult {
         logger.info("Calling Valdivia to get quote for ISBN: $isbn")
-        val bookSummary = catalogService.searchByIsbn(isbn)
+        val bookSummary = catalogService.findByIsbn(isbn)
         if (bookSummary == null) {
             logger.warn("No book found for ISBN: $isbn")
             return BookQuoteResult.Error(isbn)

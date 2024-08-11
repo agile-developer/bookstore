@@ -20,7 +20,7 @@ class CatalogServiceImpl(
         return results.map { BookSummary(it.isbn, it.title, it.author) }
     }
 
-    override fun searchByIsbn(isbn: String): BookSummary? {
+    override fun findByIsbn(isbn: String): BookSummary? {
         logger.info("Calling Boogle to find single book by ISBN: $isbn")
         val result = boogleClient.findBookByIsbn(isbn).getOrNull()
         if (result == null) {

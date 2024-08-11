@@ -1,12 +1,15 @@
 package co.bound.exercise.bookstore.statistics.service
 
+import co.bound.exercise.bookstore.catalog.service.CatalogServiceImpl
 import co.bound.exercise.bookstore.domain.BookStatistics
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
-class StatisticsServiceImpl : StatisticsService {
+class StatisticsServiceImpl(
+    val catalogServiceImpl: CatalogServiceImpl
+) : StatisticsService {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -28,7 +31,12 @@ class StatisticsServiceImpl : StatisticsService {
             statistics = statistics.incrementSearchCount()
             bookStatisticsRepo.replace(isbn, statistics)
         } else {
-            statistics = BookStatistics(isbn, 1, 0)
+            val bookSummary = catalogServiceImpl.findByIsbn(isbn)
+            if (bookSummary == null) {
+                logger.warn("No book found for ISBN: $isbn")
+                return 0;
+            }
+            statistics = BookStatistics(bookSummary, 1, 0)
             bookStatisticsRepo[isbn] = statistics
         }
         return statistics.searchCount
@@ -41,7 +49,12 @@ class StatisticsServiceImpl : StatisticsService {
             statistics = statistics.incrementOrderCount()
             bookStatisticsRepo.replace(isbn, statistics)
         } else {
-            statistics = BookStatistics(isbn, 0, 1)
+            val bookSummary = catalogServiceImpl.findByIsbn(isbn)
+            if (bookSummary == null) {
+                logger.warn("No book found for ISBN: $isbn")
+                return 0;
+            }
+            statistics = BookStatistics(bookSummary, 0, 1)
             bookStatisticsRepo[isbn] = statistics
         }
         return statistics.orderCount

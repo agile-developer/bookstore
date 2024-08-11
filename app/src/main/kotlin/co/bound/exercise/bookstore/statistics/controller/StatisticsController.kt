@@ -29,7 +29,7 @@ class StatisticsController(
         return when(val statisticsResult = statisticsService.getBookStatistics(isbn)) {
             is BookStatisticsResult.Found -> {
                 val stats = statisticsResult.bookStatistics
-                ResponseEntity.ok(BookStatisticsResponse(stats.isbn, stats.searchCount, stats.orderCount))
+                ResponseEntity.ok(BookStatisticsResponse(stats.bookSummary.isbn, stats.searchCount, stats.orderCount))
             }
 
             is BookStatisticsResult.NotFound -> {

@@ -6,5 +6,5 @@ interface CatalogService {
 
     fun searchByAuthor(author: String): List<BookSummary>
 
-    fun searchByIsbn(isbn: String): BookSummary?
+    fun findByIsbn(isbn: String): BookSummary?
 }

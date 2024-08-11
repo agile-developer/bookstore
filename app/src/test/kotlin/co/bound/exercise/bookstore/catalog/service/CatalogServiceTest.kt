@@ -39,7 +39,7 @@ class CatalogServiceTest {
         val isbn = "978-0141989587"
 
         // act
-        val result = catalogService.searchByIsbn(isbn)
+        val result = catalogService.findByIsbn(isbn)
 
         // assert
         assertThat(result).isNotNull
@@ -51,7 +51,7 @@ class CatalogServiceTest {
         val isbn = "Unknown"
 
         // act
-        val result = catalogService.searchByIsbn(isbn)
+        val result = catalogService.findByIsbn(isbn)
 
         // assert
         assertThat(result).isNull()
