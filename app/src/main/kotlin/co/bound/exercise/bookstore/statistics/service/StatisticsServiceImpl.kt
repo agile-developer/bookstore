@@ -1,6 +1,6 @@
 package co.bound.exercise.bookstore.statistics.service
 
-import co.bound.exercise.bookstore.catalog.service.CatalogServiceImpl
+import co.bound.exercise.bookstore.catalog.service.CatalogService
 import co.bound.exercise.bookstore.domain.BookStatistics
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class StatisticsServiceImpl(
-    val catalogServiceImpl: CatalogServiceImpl
+    val catalogServiceImpl: CatalogService
 ) : StatisticsService {
 
     private val logger = LoggerFactory.getLogger(javaClass)
