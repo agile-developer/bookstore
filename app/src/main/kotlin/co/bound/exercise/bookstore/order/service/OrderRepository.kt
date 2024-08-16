@@ -3,10 +3,10 @@ package co.bound.exercise.bookstore.order.service
 import co.bound.exercise.bookstore.domain.Order
 import co.bound.exercise.bookstore.order.controller.CreateOrderRequest
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Repository
 import java.util.concurrent.ConcurrentHashMap
 
-@Service
+@Repository
 class OrderRepository {
 
     private val logger = LoggerFactory.getLogger(javaClass)
