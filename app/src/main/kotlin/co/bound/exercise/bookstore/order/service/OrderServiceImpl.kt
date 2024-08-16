@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 @Service
 class OrderServiceImpl(
     private val quoteService: QuoteService,
-    private val valdiviaClient: ValdiviaClient,
+    private val valdiviaClient: ValdiviaClient
 ) : OrderService {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -19,18 +19,19 @@ class OrderServiceImpl(
     private val createdOrders = ConcurrentHashMap<String, Order>()
 
     override fun createOrder(request: CreateOrderRequest): CreateOrderResult {
-        synchronized(request) {
-            if (createdOrders.containsKey(request.idempotencyId)) {
-                logger.info("IdempotencyId: ${request.idempotencyId} already known, returning existing order")
-                return CreateOrderResult.Success(createdOrders[request.idempotencyId]!!)
-            }
+        if (createdOrders.containsKey(request.idempotencyId)) {
+            logger.info("IdempotencyId: ${request.idempotencyId} already known, returning existing order")
+            return CreateOrderResult.Success(createdOrders[request.idempotencyId]!!)
+        }
 
-            val bookQuote = quoteService.getQuote(request.quoteId)
-            if (bookQuote == null) {
-                logger.error("QuoteId: ${request.quoteId} is not valid")
-                return CreateOrderResult.Error(request.quoteId)
-            }
+        val bookQuote = quoteService.getQuote(request.quoteId)
+        if (bookQuote == null) {
+            logger.error("QuoteId: ${request.quoteId} is not valid")
+            return CreateOrderResult.Error(request.quoteId)
+        }
 
+        // Multiple threads trying to create an order for a quote should synchronize on that quote instance
+        synchronized(bookQuote) {
             logger.info("Calling Valdivia to purchase quoteId: ${request.quoteId}")
             runCatching {
                 valdiviaClient.purchaseBook(request.quoteId)
