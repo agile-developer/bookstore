@@ -30,6 +30,11 @@ class OrderRepository {
     }
 
     fun save(idempotencyId: String, order: Order) {
-        createdOrders[idempotencyId] = order
+        if (createdOrders.containsKey(idempotencyId)) {
+            val existingOrder = createdOrders[idempotencyId]!!
+            logger.warn("Order with id:${existingOrder.id} already exists for idempotency-id: $idempotencyId")
+            return
+        }
+        createdOrders.putIfAbsent(idempotencyId, order)
     }
 }
