@@ -16,7 +16,7 @@ class OrderServiceTest {
     private val valdiviaClient = ValdiviaClient()
     private val catalogService = CatalogServiceImpl(BoogleClient())
     private val quoteService = QuoteServiceImpl(valdiviaClient, catalogService)
-    private val orderService = OrderServiceImpl(quoteService, valdiviaClient)
+    private val orderService = OrderServiceImpl(quoteService, valdiviaClient, OrderRepository())
 
     @Test
     fun `should create an order when provided a valid request`() {

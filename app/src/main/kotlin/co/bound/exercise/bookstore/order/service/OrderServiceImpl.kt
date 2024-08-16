@@ -6,22 +6,20 @@ import co.bound.exercise.bookstore.quote.service.QuoteService
 import co.bound.exercise.thirdparties.valdivia.ValdiviaClient
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class OrderServiceImpl(
     private val quoteService: QuoteService,
-    private val valdiviaClient: ValdiviaClient
+    private val valdiviaClient: ValdiviaClient,
+    private val orderRepository: OrderRepository
 ) : OrderService {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val createdOrders = ConcurrentHashMap<String, Order>()
-
     override fun createOrder(request: CreateOrderRequest): CreateOrderResult {
-        if (createdOrders.containsKey(request.idempotencyId)) {
+        if (orderRepository.isCreated(request)) {
             logger.info("IdempotencyId: ${request.idempotencyId} already known, returning existing order")
-            return CreateOrderResult.Success(createdOrders[request.idempotencyId]!!)
+            return CreateOrderResult.Success(orderRepository.findByIdempotencyId(request.idempotencyId)!!)
         }
 
         val bookQuote = quoteService.getQuote(request.quoteId)
@@ -46,7 +44,7 @@ class OrderServiceImpl(
                 status = Order.Status.CREATED,
                 deliveryAddress = request.deliveryAddress
             )
-            createdOrders[request.idempotencyId] = order
+            orderRepository.save(request.idempotencyId, order)
             quoteService.invalidateQuote(request.quoteId)
             return CreateOrderResult.Success(order)
         }
